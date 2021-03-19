@@ -1,0 +1,10 @@
+MOVE 4 @2
+MOVE @2 @4
+
+PRINT @4
+
+ADD @2 @4
+
+PRINT @4
+
+HLT
