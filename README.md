@@ -8,6 +8,18 @@ Each instruction has a `type` and a `class`, so that the interpreter can disting
 
 An instruction belongs to at least one of the following classes:
 
+<style>
+table th:first-of-type {
+    width: 10%;
+}
+table th:nth-of-type(2) {
+    width: 40%;
+}
+table th:nth-of-type(3) {
+    width: 50%;
+}
+</style>
+
 |Class|Semantic|
 |--|--|
 |`STACK`| The instruction involves the stack|
