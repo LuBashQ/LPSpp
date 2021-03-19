@@ -11,10 +11,10 @@ public:
 private:
 	std::vector<int> stack;
 	std::vector<int> reg;
+	std::vector<Instruction> operations;
 	unsigned sp;
 	bool halted;
 
 	void parse(const std::string& file);
 	void execute_instruction(Instruction& op);
-	std::vector<Instruction> operations;
 };

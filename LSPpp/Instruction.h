@@ -5,7 +5,7 @@
 #include <map>
 #include <string>
 
-enum OPERATION_CLASS {
+enum Operation_Class {
 	STACK = 1,
 	IMMEDIATE = 2,
 	REGISTER = 4,
@@ -14,7 +14,7 @@ enum OPERATION_CLASS {
 	SPECIAL = 32
 };
 
-enum OPERATION {
+enum class Operation {
 	PUSH = 0,
 	POP,
 	PRINT,
@@ -26,60 +26,56 @@ enum OPERATION {
 	MOVE
 };
 
-static const std::map<std::string, OPERATION> m = {
-	{"PUSH", PUSH},
-	{"POP", POP},
-	{"PRINT", PRINT},
-	{"HLT", HLT},
-	{"ADD", ADD},
-	{"SUB", SUB},
-	{"MUL", MUL},
-	{"DIV", DIV},
-	{"MOVE", MOVE},
+static const std::map<std::string, Operation> m = {
+	{"PUSH", Operation::PUSH},
+	{"POP", Operation::POP},
+	{"PRINT", Operation::PRINT},
+	{"HLT", Operation::HLT},
+	{"ADD", Operation::ADD},
+	{"SUB", Operation::SUB},
+	{"MUL", Operation::MUL},
+	{"DIV", Operation::DIV},
+	{"MOVE", Operation::MOVE},
 };
 
-static int get_operation_class(OPERATION o) {
+static const int get_operation_class(Operation o) {
 	switch (o)
 	{
-	case PUSH:
+	case Operation::PUSH:
 		return STACK | IMMEDIATE;
-	case POP:
+	case Operation::POP:
 		return STACK | REGISTER;
-	case PRINT:
+	case Operation::PRINT:
 		return REGISTER;
-	case HLT:
+	case Operation::HLT:
 		return SPECIAL;
-	case ADD:
-	case SUB:
-	case MUL:
-	case DIV:
-	case MOVE:
+	case Operation::ADD:
+	case Operation::SUB:
+	case Operation::MUL:
+	case Operation::DIV:
+	case Operation::MOVE:
 		return REGISTER | IMMEDIATE;
 	default:
 		throw std::invalid_argument("Operation not supported");
 	}
 }
 
+
 class Instruction
 {
 public:
-	OPERATION type;
+	Operation type;
 	int op_class;
 	int immediate_value;
 	unsigned first_reg;
 	unsigned second_reg;
 	int jump_to_relative_line;
 
-	Instruction(int cls, OPERATION type); // SPECIAL
-	Instruction(int cls, OPERATION type, int immediate); // STACK & IMMEDIATE
-	Instruction(int cls, OPERATION type, unsigned x); // REGISTER & STACK
-	Instruction(int cls, OPERATION type, int immediate, unsigned x); // REGISTER & IMMEDIATE
-	Instruction(int cls, OPERATION type, unsigned x, unsigned y); // REGISTER
+	Instruction(int cls, Operation type); // SPECIAL
+	Instruction(int cls, Operation type, int immediate); // STACK & IMMEDIATE
+	Instruction(int cls, Operation type, unsigned x); // REGISTER & STACK
+	Instruction(int cls, Operation type, int immediate, unsigned x); // REGISTER & IMMEDIATE
+	Instruction(int cls, Operation type, unsigned x, unsigned y); // REGISTER
 	Instruction() = delete;
 	~Instruction() {}
-
-	friend std::ostream& operator<<(std::ostream& out, Instruction& o) {
-		out << "[OP: " << o.type << ", I: " << o.immediate_value << "]" << std::endl;
-		return out;
-	}
 };

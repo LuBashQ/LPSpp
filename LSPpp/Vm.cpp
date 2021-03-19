@@ -4,46 +4,46 @@ void Vm::execute_instruction(Instruction& op)
 {
 	switch (op.type)
 	{
-	case PUSH:
+	case Operation::PUSH:
 		if (op.op_class & IMMEDIATE)
 			stack[++sp] = op.immediate_value;
 		else
 			stack[++sp] = reg[op.first_reg];
 		break;
-	case POP:
-		reg[op.first_reg] = stack[sp];
+	case Operation::POP:
+		reg[op.first_reg] = stack[sp--];
 		break;
-	case PRINT:
+	case Operation::PRINT:
 		std::cout << reg[op.first_reg] << std::endl;
 		break;
-	case HLT:
+	case Operation::HLT:
 		halted = true;
 		break;
-	case MOVE:
+	case Operation::MOVE:
 		if (op.op_class & REGISTER)
 			reg[op.second_reg] = reg[op.first_reg];
 		else
 			reg[op.first_reg] = op.immediate_value;
 		break;
-	case ADD:
+	case Operation::ADD:
 		if (op.op_class & REGISTER)
 			reg[op.second_reg] += reg[op.first_reg];
 		else
 			reg[op.first_reg] += op.immediate_value;
 		break;
-	case SUB:
+	case Operation::SUB:
 		if (op.op_class & REGISTER)
 			reg[op.second_reg] -= reg[op.first_reg];
 		else
 			reg[op.first_reg] -= op.immediate_value;
 		break;
-	case MUL:
+	case Operation::MUL:
 		if (op.op_class & REGISTER)
 			reg[op.second_reg] *= reg[op.first_reg];
 		else
 			reg[op.first_reg] *= op.immediate_value;
 		break;
-	case DIV:
+	case Operation::DIV:
 		if (op.op_class & REGISTER)
 			reg[op.second_reg] /= reg[op.first_reg];
 		else
@@ -85,7 +85,7 @@ void Vm::parse(const std::string& file)
 			operations.emplace_back(SPECIAL, m.find(line[0])->second);
 			break;
 		case 2:
-			if (line[1][0] == '@')// register
+			if (line[1][0] == '@') // register
 				operations.emplace_back(STACK | REGISTER, m.find(line[0])->second, (unsigned)std::atoi(line[1].substr(1).c_str()));
 			else //immediate
 				operations.emplace_back(STACK | IMMEDIATE, m.find(line[0])->second, std::atoi(line[1].c_str()));
