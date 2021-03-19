@@ -44,6 +44,7 @@ static int get_operation_class(OPERATION o) {
 	case PUSH:
 		return STACK | IMMEDIATE;
 	case POP:
+		return STACK | REGISTER;
 	case PRINT:
 		return REGISTER;
 	case HLT:
