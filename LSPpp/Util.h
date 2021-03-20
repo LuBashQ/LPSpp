@@ -4,10 +4,16 @@
 #include <vector>
 #include <regex>
 
-static std::vector<std::string> tokenize(const std::string str, const std::regex re)
+static std::vector<std::string> tokenize(const std::string str)
 {
-	std::sregex_token_iterator it{ str.begin(), str.end(), re, -1 };
-	std::vector<std::string> tokenized{ it, {} };
+	std::regex no_comments(R"([;]+)");
+	std::regex split(R"([\s|\n]+)");
+
+	std::sregex_token_iterator pre{ str.begin(), str.end(), no_comments, -1 };
+	std::vector<std::string> pre_tokenized{ pre, {} };
+
+	std::sregex_token_iterator post{ pre_tokenized[0].begin(), pre_tokenized[0].end(), split, -1 };
+	std::vector<std::string> tokenized{ post, {} };
 
 	tokenized.erase(
 		std::remove_if(tokenized.begin(),
@@ -16,6 +22,8 @@ static std::vector<std::string> tokenize(const std::string str, const std::regex
 				return s.size() == 0;
 			}),
 		tokenized.end());
+
+
 
 	return tokenized;
 }
@@ -26,10 +34,9 @@ static std::vector<std::vector<std::string>> get_tokens(const std::string& file)
 	if (f.is_open()) {
 		std::vector<std::vector<std::string>> tokens;
 		std::string line;
-		std::regex re(R"([\s|\n]+)");
 		while (getline(f, line))
 		{
-			std::vector<std::string> tokenized_line = tokenize(line, re);
+			std::vector<std::string> tokenized_line = tokenize(line);
 			tokens.push_back(tokenized_line);
 		}
 		f.close();

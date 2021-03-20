@@ -1,8 +1,8 @@
 #include "Instruction.h"
 
-Instruction::Instruction(int cls, Operation t)
+Instruction::Instruction(std::vector<Operation_Class>&& cls, Operation t)
 {
-	op_class = cls;
+	classes = std::move(cls);
 	type = t;
 	immediate_value = 0;
 	first_reg = 0;
@@ -10,26 +10,26 @@ Instruction::Instruction(int cls, Operation t)
 	jump_to_relative_line = 0;
 }
 
-Instruction::Instruction(int cls, Operation type, int immediate)
-	: Instruction(cls, type)
+Instruction::Instruction(std::vector<Operation_Class>&& cls, Operation type, int immediate)
+	: Instruction(std::move(cls), type)
 {
 	immediate_value = immediate;
 }
 
-Instruction::Instruction(int cls, Operation type, unsigned x)
-	: Instruction(cls, type)
+Instruction::Instruction(std::vector<Operation_Class>&& cls, Operation type, unsigned x)
+	: Instruction(std::move(cls), type)
 {
 	first_reg = x;
 }
 
-Instruction::Instruction(int cls, Operation type, int immediate, unsigned x)
-	: Instruction(cls, type, immediate)
+Instruction::Instruction(std::vector<Operation_Class>&& cls, Operation type, int immediate, unsigned x)
+	: Instruction(std::move(cls), type, immediate)
 {
 	first_reg = x;
 }
 
-Instruction::Instruction(int cls, Operation type, unsigned x, unsigned y)
-	: Instruction(cls, type, x)
+Instruction::Instruction(std::vector<Operation_Class>&& cls, Operation type, unsigned x, unsigned y)
+	: Instruction(std::move(cls), type, x)
 {
 	second_reg = y;
 }
