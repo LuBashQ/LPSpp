@@ -23,8 +23,6 @@ static std::vector<std::string> tokenize(const std::string str)
 			}),
 		tokenized.end());
 
-
-
 	return tokenized;
 }
 

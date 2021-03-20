@@ -109,7 +109,7 @@ void Vm::parse(const std::string& file)
 	auto tokens = get_tokens(file);
 	for (auto& line : tokens)
 	{
-		if (line.size() == 0) continue;
+		if (line.size() == 0 || line[0][0] == ':') continue;
 		const Operation op = op_table.find(line[0])->second;
 
 		switch (line.size())
@@ -118,31 +118,31 @@ void Vm::parse(const std::string& file)
 			operations.emplace_back(std::vector<Operation_Class>({ Operation_Class::SPECIAL }), op);
 			break;
 		case 2:
-			if (line[1][0] == '@') // register
+			if (line[1][0] == '@')
 				operations.emplace_back(std::vector<Operation_Class>({ Operation_Class::STACK, Operation_Class::REGISTER }),
 					op,
 					static_cast<unsigned>(std::atoi(line[1].substr(1).c_str())));
-			else if (line[1][0] == ':') // jump
-				if (line[1][1] == '@') // jump register
+			else if (line[1][0] == ':')
+				if (line[1][1] == '@')
 					operations.emplace_back(std::vector<Operation_Class>({ Operation_Class::REGISTER, Operation_Class::JUMP }),
 						op,
 						static_cast<unsigned>(std::atoi(line[1].substr(2).c_str())));
-				else // jump immediate
+				else
 					operations.emplace_back(std::vector<Operation_Class>({ Operation_Class::STACK, Operation_Class::JUMP, Operation_Class::IMMEDIATE }),
 						op,
 						std::atoi(line[1].substr(1).c_str()));
-			else // immediate
+			else
 				operations.emplace_back(std::vector<Operation_Class>({ Operation_Class::STACK, Operation_Class::IMMEDIATE }),
 					op,
 					std::atoi(line[1].c_str()));
 			break;
 		case 3:
-			if (line[1][0] == '@') //register
+			if (line[1][0] == '@')
 				operations.emplace_back(std::vector<Operation_Class>({ Operation_Class::REGISTER }),
 					op,
 					static_cast<unsigned>(std::atoi(line[1].substr(1).c_str())),
 					static_cast<unsigned>(std::atoi(line[2].substr(1).c_str())));
-			else //immediate
+			else
 				operations.emplace_back(std::vector<Operation_Class>({ Operation_Class::IMMEDIATE }),
 					op,
 					std::atoi(line[1].c_str()),

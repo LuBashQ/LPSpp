@@ -7,7 +7,6 @@ Instruction::Instruction(std::vector<Operation_Class>&& cls, Operation t)
 	immediate_value = 0;
 	first_reg = 0;
 	second_reg = 0;
-	jump_to_relative_line = 0;
 }
 
 Instruction::Instruction(std::vector<Operation_Class>&& cls, Operation type, int immediate)

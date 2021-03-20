@@ -29,6 +29,7 @@ enum class Operation {
 	LEQ,
 	GT,
 	LT,
+	CALL
 };
 
 static const std::map<std::string, Operation> op_table = {
@@ -47,6 +48,7 @@ static const std::map<std::string, Operation> op_table = {
 	{"LEQ",		Operation::LEQ},
 	{"GT",		Operation::GT},
 	{"LT",		Operation::LT},
+	{"CALL",	Operation::CALL},
 };
 
 class Instruction
@@ -57,7 +59,6 @@ public:
 	int immediate_value;
 	unsigned first_reg;
 	unsigned second_reg;
-	int jump_to_relative_line;
 
 	Instruction(std::vector<Operation_Class>&& cls, Operation type); // SPECIAL
 	Instruction(std::vector<Operation_Class>&& cls, Operation type, int immediate); // STACK & IMMEDIATE & JUMP
