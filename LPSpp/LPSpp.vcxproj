@@ -24,7 +24,6 @@
     <ProjectGuid>{5f3e9c89-05b7-4218-8eb0-285b09a8995a}</ProjectGuid>
     <RootNamespace>LSPpp</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>LPSpp</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
