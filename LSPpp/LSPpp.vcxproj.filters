@@ -37,7 +37,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="test.txt">
+    <Text Include="test.lsp">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>

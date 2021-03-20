@@ -149,7 +149,7 @@
     <ClInclude Include="Vm.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="test.txt" />
+    <Text Include="test.lsp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
