@@ -2,6 +2,10 @@
 
 LSPpp is an interpreter for the simple assembly-like programming language LSP. It's written in C++1x.
 
+## How to compile and run
+
+You can either open the solution in Visual Studio 2019 or build using Cmake.
+
 ## Syntax
 
 Instructions **must** be written in capital letters. Instructions are separated by a new line and the arguments are separated by spaces.
