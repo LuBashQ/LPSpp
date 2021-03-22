@@ -151,12 +151,14 @@ void Vm::parse(const std::string& file)
             const std::string s1 = line[2].substr(1);
 
             if (line[1][0] == '@')
-                operations.emplace_back(std::vector<Operation_Class>({Operation_Class::REGISTER}),
+                operations.emplace_back(std::vector<Operation_Class>({Operation_Class::REGISTER,
+                                                                      Operation_Class::CONDITIONAL}),
                                         op,
                                         static_cast<unsigned>(std::stoi(s)),
                                         static_cast<unsigned>(std::stoi(s1)));
             else
-                operations.emplace_back(std::vector<Operation_Class>({Operation_Class::IMMEDIATE}),
+                operations.emplace_back(std::vector<Operation_Class>({Operation_Class::IMMEDIATE,
+                                                                      Operation_Class::CONDITIONAL}),
                                         op,
                                         std::stoi(line[1]),
                                         static_cast<unsigned>(std::stoi(s1)));
