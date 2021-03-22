@@ -1,6 +1,6 @@
 #include "Vm.h"
 
-void Vm::excecute_comparison_operation(const Instruction& op, std::function<bool(int, int)> cmp) {
+void Vm::execute_comparison_operation(const Instruction& op, std::function<bool(int, int)> cmp) {
 	if (std::find(op.classes.begin(), op.classes.end(), Operation_Class::IMMEDIATE) != op.classes.end())
 		if (cmp(op.immediate_value, reg[op.first_reg]))
 			reg[8] = 1;
@@ -70,16 +70,16 @@ void Vm::execute_instruction(const Instruction& op)
 		execute_jump_operation(op, [](int a, int b) {return a == b; });
 		break;
 	case Operation::GEQ:
-		excecute_comparison_operation(op, [](int a, int b) {return a >= b; });
+        execute_comparison_operation(op, [](int a, int b) { return a >= b; });
 		break;
 	case Operation::LEQ:
-		excecute_comparison_operation(op, [](int a, int b) {return a <= b; });
+        execute_comparison_operation(op, [](int a, int b) { return a <= b; });
 		break;
 	case Operation::GT:
-		excecute_comparison_operation(op, [](int a, int b) {return a > b; });
+        execute_comparison_operation(op, [](int a, int b) { return a > b; });
 		break;
 	case Operation::LT:
-		excecute_comparison_operation(op, [](int a, int b) {return a < b; });
+        execute_comparison_operation(op, [](int a, int b) { return a < b; });
 		break;
 	default:
 		throw std::invalid_argument("Operation type not supported");

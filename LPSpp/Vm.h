@@ -19,7 +19,7 @@ private:
 
 	void parse(const std::string& file);
 	void execute_instruction(const Instruction& op);
-	void excecute_comparison_operation(const Instruction& op, std::function<bool(int, int)> cmp);
+	void execute_comparison_operation(const Instruction& op, std::function<bool(int, int)> cmp);
 	void execute_arithmetic_operation(const Instruction& op, std::function<int(int, int)> f);
 	void execute_jump_operation(const Instruction& op, std::function<bool(int, int)> cond = [](int a, int b) {return true; });
 };
