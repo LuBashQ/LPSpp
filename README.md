@@ -1,6 +1,6 @@
-# LSPpp
+# LPSpp
 
-LSPpp is an interpreter for the simple assembly-like programming language LSP. It's written in C++1x.
+LSPpp is an interpreter for the simple assembly-like programming language LPS, written in C++1x.
 
 ## How to compile and run
 
