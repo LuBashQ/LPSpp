@@ -66,5 +66,5 @@ public:
 	Instruction(std::vector<Operation_Class>&& cls, Operation type, int immediate, unsigned x); // REGISTER & IMMEDIATE
 	Instruction(std::vector<Operation_Class>&& cls, Operation type, unsigned x, unsigned y); // REGISTER
 	Instruction() = delete;
-	~Instruction() {}
+	~Instruction() = default;
 };

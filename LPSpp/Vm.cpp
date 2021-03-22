@@ -1,6 +1,6 @@
 #include "Vm.h"
 
-void Vm::execute_comparison_operation(const Instruction& op, std::function<bool(int, int)>&& cmp) {
+void Vm::execute_comparison_operation(const Instruction& op, const std::function<bool(int, int)>&& cmp) {
 	if (std::find(op.classes.begin(), op.classes.end(), Operation_Class::IMMEDIATE) != op.classes.end())
 		if (cmp(op.immediate_value, reg[op.first_reg]))
 			reg[8] = 1;
@@ -11,7 +11,7 @@ void Vm::execute_comparison_operation(const Instruction& op, std::function<bool(
 		else reg[8] = 0;
 }
 
-void Vm::execute_arithmetic_operation(const Instruction& op, std::function<int(int, int)>&& f)
+void Vm::execute_arithmetic_operation(const Instruction& op, const std::function<int(int, int)>&& f)
 {
 	if (std::find(op.classes.begin(), op.classes.end(), Operation_Class::REGISTER) != op.classes.end())
 		reg[op.second_reg] = f(reg[op.second_reg], reg[op.first_reg]);
@@ -53,34 +53,34 @@ void Vm::execute_instruction(const Instruction& op)
 			reg[op.first_reg] = op.immediate_value;
 		break;
 	case Operation::ADD:
-		execute_arithmetic_operation(op, [](int a, int b) {return a + b; });
+		execute_arithmetic_operation(op, std::plus<>());
 		break;
 	case Operation::SUB:
-		execute_arithmetic_operation(op, [](int a, int b) {return a - b; });
+		execute_arithmetic_operation(op, std::minus<>());
 		break;
 	case Operation::MUL:
-		execute_arithmetic_operation(op, [](int a, int b) {return a * b; });
+		execute_arithmetic_operation(op, std::multiplies<>());
 		break;
 	case Operation::DIV:
-		execute_arithmetic_operation(op, [](int a, int b) {return a / b; });
+		execute_arithmetic_operation(op, std::divides<>());
 		break;
 	case Operation::JMP:
 		execute_jump_operation(op);
 		break;
 	case Operation::JMPC:
-		execute_jump_operation(op, [](int a, int b) {return a == b; });
+		execute_jump_operation(op, std::equal_to<>());
 		break;
 	case Operation::GEQ:
-        execute_comparison_operation(op, [](int a, int b) { return a >= b; });
+        execute_comparison_operation(op, std::greater_equal<>());
 		break;
 	case Operation::LEQ:
-        execute_comparison_operation(op, [](int a, int b) { return a <= b; });
+        execute_comparison_operation(op, std::less_equal<>());
 		break;
 	case Operation::GT:
-        execute_comparison_operation(op, [](int a, int b) { return a > b; });
+        execute_comparison_operation(op, std::greater<>());
 		break;
 	case Operation::LT:
-        execute_comparison_operation(op, [](int a, int b) { return a < b; });
+        execute_comparison_operation(op, std::less<>());
 		break;
 	default:
 		throw std::invalid_argument("Operation type not supported");
@@ -115,43 +115,55 @@ void Vm::parse(const std::string& file)
 
 		switch (line.size())
 		{
-		case 1:
-			operations.emplace_back(std::vector<Operation_Class>({ Operation_Class::SPECIAL }), op);
-			break;
-		case 2:
-			if (line[1][0] == '@')
-				operations.emplace_back(std::vector<Operation_Class>({ Operation_Class::STACK, Operation_Class::REGISTER }),
-					op,
-					static_cast<unsigned>(std::atoi(line[1].substr(1).c_str())));
-			else if (line[1][0] == ':')
-				if (line[1][1] == '@')
-					operations.emplace_back(std::vector<Operation_Class>({ Operation_Class::REGISTER, Operation_Class::JUMP }),
-						op,
-						static_cast<unsigned>(std::atoi(line[1].substr(2).c_str())));
-				else
-					operations.emplace_back(std::vector<Operation_Class>({ Operation_Class::STACK, Operation_Class::JUMP, Operation_Class::IMMEDIATE }),
-						op,
-						std::atoi(line[1].substr(1).c_str()));
-			else
-				operations.emplace_back(std::vector<Operation_Class>({ Operation_Class::STACK, Operation_Class::IMMEDIATE }),
-					op,
-					std::atoi(line[1].c_str()));
-			break;
-		case 3:
-			if (line[1][0] == '@')
-				operations.emplace_back(std::vector<Operation_Class>({ Operation_Class::REGISTER }),
-					op,
-					static_cast<unsigned>(std::atoi(line[1].substr(1).c_str())),
-					static_cast<unsigned>(std::atoi(line[2].substr(1).c_str())));
-			else
-				operations.emplace_back(std::vector<Operation_Class>({ Operation_Class::IMMEDIATE }),
-					op,
-					std::atoi(line[1].c_str()),
-					static_cast<unsigned>(std::atoi(line[2].substr(1).c_str())));
-			break;
+		case 1: {
+            operations.emplace_back(std::vector<Operation_Class>({Operation_Class::SPECIAL}),
+                                    op);
+            break;
+        }
+		case 2: {
+            const std::string s = line[1].substr(1);
+
+            if (line[1][0] == '@')
+                operations.emplace_back(
+                        std::vector<Operation_Class>({Operation_Class::STACK, Operation_Class::REGISTER}),
+                        op,
+                        static_cast<unsigned>(std::stoi(line[1].substr(1))));
+            else if (line[1][0] == ':')
+                if (line[1][1] == '@')
+                    operations.emplace_back(
+                            std::vector<Operation_Class>({Operation_Class::REGISTER, Operation_Class::JUMP}),
+                            op,
+                            static_cast<unsigned>(std::stoi(line[1].substr(2))));
+                else
+                    operations.emplace_back(std::vector<Operation_Class>(
+                            {Operation_Class::STACK, Operation_Class::JUMP, Operation_Class::IMMEDIATE}),
+                                            op,
+                                            std::stoi(line[1].substr(1)));
+            else
+                operations.emplace_back(
+                        std::vector<Operation_Class>({Operation_Class::STACK, Operation_Class::IMMEDIATE}),
+                        op,
+                        std::stoi(line[1]));
+            break;
+        }
+		case 3: {
+            const std::string s = line[1].substr(1);
+            const std::string s1 = line[2].substr(1);
+
+            if (line[1][0] == '@')
+                operations.emplace_back(std::vector<Operation_Class>({Operation_Class::REGISTER}),
+                                        op,
+                                        static_cast<unsigned>(std::stoi(s)),
+                                        static_cast<unsigned>(std::stoi(s1)));
+            else
+                operations.emplace_back(std::vector<Operation_Class>({Operation_Class::IMMEDIATE}),
+                                        op,
+                                        std::stoi(line[1]),
+                                        static_cast<unsigned>(std::stoi(s1)));
+            break;
+        }
 		default:
 			throw std::invalid_argument("Instruction has too many arguments");
-			break;
 		}
 	}
 }

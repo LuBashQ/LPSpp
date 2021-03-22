@@ -7,7 +7,7 @@
 class Vm {
 public:
 	Vm();
-	~Vm() {};
+	~Vm() = default;
 	void execute_program(const std::string&& file);
 private:
 	std::vector<int> stack;
@@ -19,7 +19,7 @@ private:
 
 	void parse(const std::string& file);
 	void execute_instruction(const Instruction& op);
-	void execute_comparison_operation(const Instruction& op, std::function<bool(int, int)>&& cmp);
-	void execute_arithmetic_operation(const Instruction& op, std::function<int(int, int)>&& f);
+	void execute_comparison_operation(const Instruction& op, const std::function<bool(int, int)>&& cmp);
+	void execute_arithmetic_operation(const Instruction& op, const std::function<int(int, int)>&& f);
 	void execute_jump_operation(const Instruction& op, const std::function<bool(int, int)>&& cond = [](int a, int b) {return true; });
 };
