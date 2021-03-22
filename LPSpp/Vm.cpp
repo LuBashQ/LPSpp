@@ -1,6 +1,6 @@
 #include "Vm.h"
 
-void Vm::execute_comparison_operation(const Instruction& op, std::function<bool(int, int)> cmp) {
+void Vm::execute_comparison_operation(const Instruction& op, std::function<bool(int, int)>&& cmp) {
 	if (std::find(op.classes.begin(), op.classes.end(), Operation_Class::IMMEDIATE) != op.classes.end())
 		if (cmp(op.immediate_value, reg[op.first_reg]))
 			reg[8] = 1;
@@ -11,17 +11,18 @@ void Vm::execute_comparison_operation(const Instruction& op, std::function<bool(
 		else reg[8] = 0;
 }
 
-void Vm::execute_arithmetic_operation(const Instruction& op, std::function<int(int, int)> f) {
+void Vm::execute_arithmetic_operation(const Instruction& op, std::function<int(int, int)>&& f)
+{
 	if (std::find(op.classes.begin(), op.classes.end(), Operation_Class::REGISTER) != op.classes.end())
 		reg[op.second_reg] = f(reg[op.second_reg], reg[op.first_reg]);
 	else
 		reg[op.first_reg] = f(reg[op.first_reg], op.immediate_value);
 }
 
-void Vm::execute_jump_operation(const Instruction& op, std::function<bool(int, int)> cond)
+void Vm::execute_jump_operation(const Instruction& op, const std::function<bool(int, int)>&& cond)
 {
 	if (std::find(op.classes.begin(), op.classes.end(), Operation_Class::IMMEDIATE) != op.classes.end())
-		if (cond(reg[8], 1)) std::advance(current_instruction, op.immediate_value - 1);
+        if (cond(reg[8], 1)) std::advance(current_instruction, op.immediate_value - 1);
 	else
 		if (cond(reg[8], 1)) std::advance(current_instruction, reg[op.first_reg] - 1);
 }
@@ -109,7 +110,7 @@ void Vm::parse(const std::string& file)
 	auto tokens = get_tokens(file);
 	for (auto& line : tokens)
 	{
-		if (line.size() == 0 || line[0][0] == ':') continue;
+		if (line.empty() || line[0][0] == ':') continue;
 		const Operation op = op_table.find(line[0])->second;
 
 		switch (line.size())
