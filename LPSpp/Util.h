@@ -5,7 +5,7 @@
 #include <vector>
 #include <regex>
 
-static std::vector<std::string> tokenize(const std::string str) {
+static std::vector<std::string> tokenize(const std::string& str) {
     std::regex no_comments(R"([;]+)");
     std::regex split(R"([\s|\n]+)");
 
@@ -19,7 +19,7 @@ static std::vector<std::string> tokenize(const std::string str) {
             std::remove_if(tokenized.begin(),
                            tokenized.end(),
                            [](std::string const &s) {
-                               return s.size() == 0;
+                               return s.empty();
                            }),
             tokenized.end());
 
