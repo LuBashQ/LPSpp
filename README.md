@@ -42,4 +42,3 @@ A type is a possible instruction. Currently there are `9` valid instructions:
 |`MOVE (x \| @x) @y`|`REGISTER \| IMMEDIATE`| Copies the content of the `@x`, or `x`, into `@y`|
 |`GEQ, LEQ, GT, LT (x \| @x) @y`| `REGISTER \| IMMEDIATE`| Executes a comparison between `x` (or `@x`) and `@y`, and sets `@8` to `1` if true|
 |`JMP (:x \| :@x)`|`STACK \| REGISTER \| JUMP`|Jumps to the `x` or `@x`-th instruction|
-
