@@ -37,7 +37,7 @@ void Vm::execute_instruction(const Instruction &op) {
             reg[op.first_reg] = stack[sp--];
             break;
         case Operation::PRINT:
-            std::cout << reg[op.first_reg] << std::endl;
+            std::cout << reg[op.first_reg] << "\n";
             break;
         case Operation::HLT:
             halted = true;
