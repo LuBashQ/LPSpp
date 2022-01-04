@@ -18,9 +18,11 @@ void Vm::execute_arithmetic_operation(const Instruction &op, const std::function
 }
 
 void Vm::execute_jump_operation(const Instruction &op, const std::function<bool(int, int)> &&cond) {
-    if (std::find(op.classes.begin(), op.classes.end(), Operation_Class::IMMEDIATE) != op.classes.end())
+    if (std::find(op.classes.begin(), op.classes.end(), Operation_Class::IMMEDIATE) != op.classes.end()) {
         if (cond(reg[8], 1)) std::advance(current_instruction, op.immediate_value - 1);
-        else if (cond(reg[8], 1)) std::advance(current_instruction, reg[op.first_reg] - 1);
+    }
+    else
+        if (cond(reg[8], 1)) std::advance(current_instruction, reg[op.first_reg] - 1);
 }
 
 void Vm::execute_instruction(const Instruction &op) {
@@ -90,11 +92,11 @@ Vm::Vm() {
 
 void Vm::execute_program(const std::string &&file) {
     parse(file);
-    for (current_instruction = operations.begin(); current_instruction != operations.end(); current_instruction++)
+    for (Instruction& instruction : operations)
         if (halted)
             break;
         else
-            execute_instruction(*current_instruction);
+            execute_instruction(instruction);
 }
 
 void Vm::parse(const std::string &file) {
